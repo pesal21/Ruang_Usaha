@@ -1,89 +1,128 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard - RuangUsaha</title>
+    <title>Admin Dashboard – RuangUsaha</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        [x-cloak] {
-            display: none !important;
+        body { font-family: 'Poppins', sans-serif; }
+        [x-cloak] { display: none !important; }
+
+        /* Latar belakang gradien halus */
+        .admin-bg {
+            background-color: #f8fafc;
+            background-image:
+                radial-gradient(ellipse 60% 50% at 50% -10%, rgba(59,130,246,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 90% 80%, rgba(45,212,191,0.06) 0%, transparent 55%);
         }
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800">
+<body class="admin-bg text-gray-800 min-h-screen flex flex-col">
 
-    <nav class="bg-white border-b px-10 py-4 flex justify-between items-center">
+    {{-- Navbar Admin --}}
+    <nav class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b-2 border-blue-500 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
 
-        {{-- LOGO --}}
-        <div class="flex items-center gap-3">
-            <img src="{{ asset('Logo.png') }}" class="w-8 h-8" alt="logo">
-            <span class="font-semibold text-lg">RuangUsaha</span>
-        </div>
+            {{-- Logo & Brand --}}
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 group">
+                <img src="{{ asset('Logo.png') }}" class="w-8 h-8 transition-transform group-hover:scale-110" alt="logo">
+                <span class="text-xl font-bold bg-gradient-to-r from-blue-700 to-cyan-600 bg-clip-text text-transparent">
+                    RuangUsaha
+                </span>
+            </a>
 
-        {{-- NAVIGASI --}}
-        <div class="flex items-center gap-8 text-sm font-regular">
-            <a href="{{ route('admin.dashboard') }}"
-                class="{{ request()->routeIs('admin.dashboard') ? 'text-blue-600 font-medium' : 'text-gray-600' }} hover:text-blue-600 transition">
-                Beranda
-            </a>
-            <a href="{{ route('admin.umkm.data') }}"
-                class="{{ request()->routeIs('admin.umkm.*') ? 'text-blue-600 font-medium' : 'text-gray-600' }} hover:text-blue-600 transition">
-                Data UMKM
-            </a>
-            <a href="{{ route('admin.user.index') }}"
-                class="{{ request()->routeIs('admin.user.*') ? 'text-blue-600 font-medium' : 'text-gray-600' }} hover:text-blue-600 transition">
-                User Accounts
-            </a>
-            <a href="{{ route('admin.kategori.index') }}"
-                class="{{ request()->routeIs('admin.kategori.*') ? 'text-blue-600 font-medium' : 'text-gray-600' }} hover:text-blue-600 transition">
-                Kelola Kategori
-            </a>
-            <a href="{{ route('admin.blog.index') }}"
-                class="{{ request()->routeIs('admin.blog.*') ? 'text-blue-600 font-medium' : 'text-gray-600' }} hover:text-blue-600 transition">
-                Kelola Blog
-            </a>
-        </div>
-
-        {{-- PROFILE DROPDOWN --}}
-        <div class="relative" x-data="{ open: false }">
-            <button @click="open = !open"
-                class="flex items-center gap-3 focus:outline-none">
-                <div class="text-right">
-                    <p class="text-sm font-semibold">{{ auth()->user()->name }}</p>
-                    <p class="text-xs text-gray-500">Admin</p>
-                </div>
-                <div class="w-9 h-9 rounded-full bg-gray-300 overflow-hidden flex items-center
-                        justify-center text-gray-500 font-semibold text-sm">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                </div>
-            </button>
-
-            <div x-show="open"
-                x-cloak
-                @click.away="open = false"
-                class="absolute right-0 mt-3 w-44 bg-white border border-gray-100
-                    rounded-xl shadow-xl overflow-hidden z-50">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit"
-                        class="w-full text-left px-4 py-3 text-sm text-red-600
-                           hover:bg-red-50 transition">
-                        Logout
-                    </button>
-                </form>
+            {{-- Desktop Navigation --}}
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="{{ route('admin.dashboard') }}"
+                   class="px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                          {{ request()->routeIs('admin.dashboard') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }}">
+                    Beranda
+                </a>
+                <a href="{{ route('admin.umkm.data') }}"
+                   class="px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                          {{ request()->routeIs('admin.umkm.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }}">
+                    Data UMKM
+                </a>
+                <a href="{{ route('admin.user.index') }}"
+                   class="px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                          {{ request()->routeIs('admin.user.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }}">
+                    User Accounts
+                </a>
+                <a href="{{ route('admin.kategori.index') }}"
+                   class="px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                          {{ request()->routeIs('admin.kategori.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }}">
+                    Kelola Kategori
+                </a>
+                <a href="{{ route('admin.blog.index') }}"
+                   class="px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                          {{ request()->routeIs('admin.blog.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }}">
+                    Kelola Blog
+                </a>
             </div>
-        </div>
 
+            {{-- Profile Dropdown --}}
+            <div class="relative" x-data="{ open: false }">
+                <button @click="open = !open"
+                        class="flex items-center gap-3 focus:outline-none group">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-semibold text-gray-900 leading-tight">{{ auth()->user()->name }}</p>
+                        <p class="text-xs text-blue-600">Administrator</p>
+                    </div>
+                    @if(auth()->user()->profile_picture)
+                        <img src="{{ asset('storage/'.auth()->user()->profile_picture) }}"
+                             class="w-9 h-9 rounded-full object-cover border-2 border-blue-400 group-hover:border-blue-500 transition">
+                    @else
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        </div>
+                    @endif
+                </button>
+
+                <div x-show="open"
+                     x-cloak
+                     @click.away="open = false"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-150"
+                     x-transition:leave-start="opacity-100 scale-100"
+                     x-transition:leave-end="opacity-0 scale-95"
+                     class="absolute right-0 mt-3 w-44 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden z-50">
+                    <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
+                        Pengaturan
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                                class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Mobile menu toggle (bisa ditambahkan nanti) --}}
+        </div>
     </nav>
 
-    <main class="px-10 py-8">
+    {{-- Konten Utama --}}
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
         @yield('content')
     </main>
 
-</body>
+    {{-- Footer opsional untuk admin --}}
+    <footer class="bg-white/60 backdrop-blur-sm border-t border-blue-100 py-4 text-center text-xs text-gray-400">
+        © {{ date('Y') }} RuangUsaha Admin Panel
+    </footer>
 
+</body>
 </html>
