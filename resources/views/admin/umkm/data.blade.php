@@ -132,12 +132,17 @@
                         {{-- STATUS --}}
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ring-1 ring-inset
-                                @if($umkm->status == 'approved') bg-green-50 text-green-700 ring-green-600/20
-                                @elseif($umkm->status == 'pending') bg-yellow-50 text-yellow-700 ring-yellow-600/20
-                                @else bg-red-50 text-red-600 ring-red-600/20
-                                @endif">
-                                {{ ucfirst($umkm->status) }}
-                            </span>
+    @if($umkm->status == 'approved')
+        bg-green-50 text-green-700 ring-green-600/20
+    @elseif($umkm->status == 'pending')
+        bg-yellow-50 text-yellow-700 ring-yellow-600/20
+    @elseif($umkm->status == 'suspended')
+        bg-gray-100 text-gray-700 ring-gray-400/20
+    @else
+        bg-red-50 text-red-600 ring-red-600/20
+    @endif">
+    {{ ucfirst($umkm->status) }}
+</span>
                         </td>
 
                         {{-- ACTIONS (dropdown) --}}
@@ -164,11 +169,11 @@
                                 class="absolute right-0 top-full mb-2 w-48
                                     bg-white border border-gray-100 rounded-xl shadow-xl z-[999] overflow-hidden py-1">
 
-                                <a href="{{ route('admin.user.show', $umkm->user->id) }}"
-                                   class="block w-full text-left px-4 py-2.5 text-sm text-gray-700
-                                          hover:bg-blue-50 transition-colors duration-150">
-                                    👤 View Profile
-                                </a>
+                                <a href="{{ route('admin.umkm.detail', $umkm->id) }}"
+   class="block w-full text-left px-4 py-2.5 text-sm text-gray-700
+          hover:bg-blue-50 transition-colors duration-150">
+    🔍 View Detail UMKM
+</a>
 
                                 @if($umkm->status === 'pending')
                                 <form action="{{ route('admin.umkm.approve', $umkm->id) }}" method="POST">
@@ -189,17 +194,33 @@
                                         ❌ Reject
                                     </button>
                                 </form>
-                                @else
-                                <form action="{{ route('admin.user.suspend', $umkm->user->id) }}" method="POST"
-                                    onsubmit="return confirm('Yakin ingin mensuspend user ini?')">
-                                    @csrf
-                                    <button type="submit"
-                                        class="w-full text-left px-4 py-2.5 text-sm text-red-600
-                                               hover:bg-red-50 transition-colors duration-150">
-                                        ⛔ Suspend User
-                                    </button>
-                                </form>
-                                @endif
+                                @elseif($umkm->status === 'approved')
+
+    {{-- SUSPEND --}}
+    <form action="{{ route('admin.umkm.suspend', $umkm->id) }}" method="POST"
+          onsubmit="return confirm('Yakin ingin suspend UMKM ini?')">
+        @csrf
+        <button type="submit"
+            class="w-full text-left px-4 py-2.5 text-sm text-red-600
+                   hover:bg-red-50 transition-colors duration-150">
+            ⛔ Suspend UMKM
+        </button>
+    </form>
+
+@elseif($umkm->status === 'suspended')
+
+    {{-- ACTIVATE --}}
+    <form action="{{ route('admin.umkm.activate', $umkm->id) }}" method="POST"
+          onsubmit="return confirm('Aktifkan kembali UMKM ini?')">
+        @csrf
+        <button type="submit"
+            class="w-full text-left px-4 py-2.5 text-sm text-green-600
+                   hover:bg-green-50 transition-colors duration-150">
+            ✅ Aktifkan UMKM
+        </button>
+    </form>
+
+@endif
                             </div>
                         </td>
                     </tr>

@@ -157,13 +157,23 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/umkm/{umkm}/dashboard', function (Umkm $umkm) {
 
-        abort_unless(auth()->user()->id === $umkm->user_id, 403);
-        abort_if($umkm->status !== 'approved', 403, 'UMKM belum disetujui admin');
+    abort_unless(auth()->user()->id === $umkm->user_id, 403);
 
-        $produk = $umkm->produk; // 🔥 INI KUNCI NYA
+    // jika pending
+    if ($umkm->status === 'pending') {
+        abort(403, 'UMKM belum disetujui admin');
+    }
 
-        return view('umkm.dashboard', compact('umkm', 'produk'));
-    })->name('umkm.dashboard');
+    // jika suspended
+    if ($umkm->status === 'suspended') {
+        abort(403, 'UMKM sedang disuspend admin');
+    }
+
+    $produk = $umkm->produk;
+     $isAdmin = auth()->check() && auth()->user()->role === 'admin';
+
+    return view('umkm.dashboard', compact('umkm', 'produk'));
+})->name('umkm.dashboard');
 
     Route::get('/pilih-umkm', [UmkmController::class, 'pilih'])->name('umkm.pilih');
 });
@@ -255,3 +265,13 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     Route::post('/blog/{id}/delete', [BlogController::class, 'destroy'])->name('admin.blog.delete');
 });
+
+Route::post('/admin/umkm/{id}/suspend', [AdminUmkmController::class, 'suspend'])
+    ->name('admin.umkm.suspend');
+
+Route::post('/admin/umkm/{id}/activate', [AdminUmkmController::class, 'activate'])
+    ->name('admin.umkm.activate');
+
+
+Route::get('/admin/umkm/{id}', [AdminUmkmController::class, 'detailUmkm'])
+    ->name('admin.umkm.detail');

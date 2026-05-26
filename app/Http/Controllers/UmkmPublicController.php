@@ -42,16 +42,22 @@ class UmkmPublicController extends Controller
         return view('umkm.index', compact('umkms', 'kategoris'));
     }
 
-    public function show($id)
-    {
-        $umkm = Umkm::findOrFail($id);
+   public function show($id)
+{
+    $umkm = Umkm::findOrFail($id);
 
-        // 🔥 tambah view setiap dibuka
-        $umkm->increment('views');
+    $isAdmin = auth()->check() && auth()->user()->role === 'admin';
 
-        $produk = ProdukUmkm::where('umkm_id', $id)->get();
-        $galeri = GaleriUmkm::where('umkm_id', $id)->get();
-
-        return view('umkm.show', compact('umkm', 'produk', 'galeri'));
+    // user biasa hanya lihat yang approved
+    if (!$isAdmin) {
+        $umkm = Umkm::where('status', 'approved')->findOrFail($id);
     }
+
+    $umkm->increment('views');
+
+    $produk = ProdukUmkm::where('umkm_id', $id)->get();
+    $galeri = GaleriUmkm::where('umkm_id', $id)->get();
+
+    return view('umkm.show', compact('umkm', 'produk', 'galeri'));
+}
 }

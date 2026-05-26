@@ -42,4 +42,33 @@ class AdminUmkmController extends Controller
 
         return view('admin.umkm.data', compact('umkms'));
     }
+
+    public function suspend($id)
+{
+    $umkm = Umkm::findOrFail($id);
+
+    $umkm->status = 'suspended';
+    $umkm->save();
+
+    return back()->with('success', 'UMKM berhasil disuspend.');
+}
+
+public function activate($id)
+{
+    $umkm = Umkm::findOrFail($id);
+
+    $umkm->status = 'approved';
+    $umkm->save();
+
+    return back()->with('success', 'UMKM berhasil diaktifkan kembali.');
+}
+
+public function detailUmkm($id)
+{
+    $umkm = Umkm::with(['user', 'kategori', 'produk', 'galeri'])
+        ->findOrFail($id);
+
+    return view('admin.umkm.detail', compact('umkm'));
+}
+
 }

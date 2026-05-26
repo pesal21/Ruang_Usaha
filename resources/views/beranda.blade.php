@@ -20,12 +20,39 @@
 
         body { font-family: 'Poppins', sans-serif; }
 
-        /* ── Gradient mesh overlay ── */
-        .hero-mesh {
+        /* ── Animated gradient mesh background (konsisten dengan daftar UMKM) ── */
+        .hero-bg {
+            background-color: #eff6ff;
             background-image:
-                radial-gradient(ellipse 70% 60% at 5%  0%,  rgba(59,130,246,.22) 0%, transparent 55%),
-                radial-gradient(ellipse 55% 50% at 95% 5%,  rgba(13,148,136,.18) 0%, transparent 55%),
-                radial-gradient(ellipse 50% 45% at 50% 110%,rgba(234,88,12,.12)  0%, transparent 55%);
+                radial-gradient(ellipse 80% 60% at 20% -10%, rgba(96,165,250,.18) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 85% 10%,  rgba(45,212,191,.14) 0%, transparent 55%),
+                radial-gradient(ellipse 50% 40% at 50% 100%, rgba(59,130,246,.10) 0%, transparent 60%);
+        }
+
+        /* ── Noise texture overlay (konsisten) ── */
+        .noise::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: .025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 128px 128px;
+            z-index: 0;
+        }
+
+        /* ── Gradient text ── */
+        .text-blue-grad {
+            background: linear-gradient(135deg, var(--blue), var(--teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .text-orange-grad {
+            background: linear-gradient(135deg, var(--orange), #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* ── Floating animation ── */
@@ -36,24 +63,28 @@
         }
         .animate-float { animation: float 5s ease-in-out infinite; }
 
-        /* ── Stat badge bounce-in ── */
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(.7) translateY(8px); }
-            to   { opacity: 1; transform: scale(1) translateY(0); }
+        /* ── Card shine effect (seperti daftar UMKM) ── */
+        .umkm-card::before,
+        .blog-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,.6) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity .3s ease;
+            pointer-events: none;
+            border-radius: inherit;
         }
-        .pop-in { animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+        .umkm-card:hover::before,
+        .blog-card:hover::before { opacity: 1; }
 
-        /* ── Gradient text ── */
-        .text-blue-grad {
-            background: linear-gradient(135deg, var(--blue), var(--teal));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .text-orange-grad {
-            background: linear-gradient(135deg, var(--orange), #f59e0b);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
+        /* ── Image zoom ── */
+        .card-img-wrap { overflow: hidden; }
+        .card-img-wrap img { transition: transform .6s cubic-bezier(.25,.46,.45,.94); }
+        .umkm-card:hover .card-img-wrap img,
+        .blog-card:hover .card-img-wrap img { transform: scale(1.08); }
 
-        /* ── Shimmer button ── */
+        /* ── CTA button shimmer ── */
         .btn-shimmer { position: relative; overflow: hidden; }
         .btn-shimmer::after {
             content: '';
@@ -114,48 +145,39 @@
         }
         .link-anim:hover::after { width: 100%; }
 
-        /* ── Stats section number counter feel ── */
-        .stat-num {
-            background: linear-gradient(135deg, var(--blue), var(--teal));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        /* ── Staggered card entrance (sama dengan daftar UMKM) ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
-        /* ── Noise texture ── */
-        body::before {
-            content: '';
-            position: fixed; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-size: 160px;
-            opacity: .022;
-            pointer-events: none;
-            z-index: 9999;
+        .card-animate {
+            animation: fadeUp .5s ease both;
         }
     </style>
 </head>
-<body class="antialiased text-gray-900 bg-white">
+<body class="hero-bg noise text-gray-800 antialiased">
 
+    {{-- ── NAVBAR ── --}}
     @include('partials.navbar')
 
     {{-- ════════════════════════════════════════════════════
          HERO
     ════════════════════════════════════════════════════ --}}
-    <section class="relative pt-28 pb-0 overflow-hidden dot-grid hero-mesh">
+    <section class="relative pt-28 pb-0 overflow-hidden">
 
-        {{-- Decorative shapes --}}
+        {{-- Decorative blobs (lebih lembut) --}}
         <div class="absolute top-10 left-4 w-72 h-72 rounded-full bg-blue-400/10 blur-3xl pointer-events-none"></div>
         <div class="absolute top-0 right-0 w-96 h-80 rounded-full bg-orange-400/10 blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-10 left-1/3 w-64 h-64 rounded-full bg-teal-400/10 blur-3xl pointer-events-none"></div>
 
-        {{-- Decorative ring accents --}}
+        {{-- Decorative rings --}}
         <div class="absolute top-20 right-12 w-32 h-32 rounded-full border-2 border-blue-200/60 pointer-events-none"></div>
         <div class="absolute top-32 right-20 w-14 h-14 rounded-full border-2 border-orange-300/50 pointer-events-none"></div>
 
         <div class="relative max-w-7xl mx-auto px-6 lg:px-16 grid md:grid-cols-2 gap-12 items-center pb-16">
 
-            {{-- ── Left: Copy ── --}}
+            {{-- Left: Copy --}}
             <div class="z-10" data-aos="fade-right" data-aos-duration="700">
-
-                {{-- Eyebrow pill --}}
                 <div class="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-200 text-blue-700
                             px-4 py-1.5 rounded-full text-xs font-bold mb-6 tracking-wide uppercase">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
@@ -172,14 +194,13 @@
                     Temukan, daftarkan, dan kembangkan bisnis lokal Anda — semua dalam satu ekosistem yang terhubung.
                 </p>
 
-                {{-- CTAs --}}
                 <div class="flex flex-wrap gap-3 mt-8">
                     @guest
                     <a href="{{ route('login.role', 'umkm') }}"
-                    class="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5
-                            bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold
-                            rounded-2xl shadow-xl shadow-orange-400/30 hover:shadow-orange-400/50
-                            hover:-translate-y-0.5 active:scale-95 transition-all duration-200 text-sm">
+                       class="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5
+                              bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold
+                              rounded-2xl shadow-xl shadow-orange-400/30 hover:shadow-orange-400/50
+                              hover:-translate-y-0.5 active:scale-95 transition-all duration-200 text-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -189,10 +210,10 @@
                     
                     @auth
                     <a href="{{ auth()->user()->umkm ? route('umkm.pilih') : route('umkm.create') }}"
-                    class="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5
-                            bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold
-                            rounded-2xl shadow-xl shadow-orange-400/30 hover:shadow-orange-400/50
-                            hover:-translate-y-0.5 active:scale-95 transition-all duration-200 text-sm">
+                       class="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5
+                              bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold
+                              rounded-2xl shadow-xl shadow-orange-400/30 hover:shadow-orange-400/50
+                              hover:-translate-y-0.5 active:scale-95 transition-all duration-200 text-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                         </svg>
@@ -201,10 +222,10 @@
                     @endauth
                     
                     <a href="{{ route('umkm.index') }}"
-                    class="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-blue-200
-                            text-blue-700 font-bold rounded-2xl hover:bg-blue-600 hover:text-white
-                            hover:border-blue-600 hover:-translate-y-0.5 active:scale-95
-                            transition-all duration-200 text-sm">
+                       class="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-blue-200
+                              text-blue-700 font-bold rounded-2xl hover:bg-blue-600 hover:text-white
+                              hover:border-blue-600 hover:-translate-y-0.5 active:scale-95
+                              transition-all duration-200 text-sm">
                         Jelajahi UMKM
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -215,30 +236,29 @@
                 {{-- Trust signals --}}
                 <div class="mt-10 flex items-center gap-6 flex-wrap">
                     <div class="flex flex-col">
-                        <span class="text-2xl font-extrabold stat-num">500+</span>
+                        <span class="text-2xl font-extrabold text-blue-grad">500+</span>
                         <span class="text-xs text-gray-500 font-medium">UMKM Terdaftar</span>
                     </div>
                     <div class="w-px h-8 bg-gray-200"></div>
                     <div class="flex flex-col">
-                        <span class="text-2xl font-extrabold stat-num">20+</span>
+                        <span class="text-2xl font-extrabold text-blue-grad">20+</span>
                         <span class="text-xs text-gray-500 font-medium">Kategori Usaha</span>
                     </div>
                     <div class="w-px h-8 bg-gray-200"></div>
                     <div class="flex flex-col">
-                        <span class="text-2xl font-extrabold stat-num">Bontang</span>
+                        <span class="text-2xl font-extrabold text-blue-grad">Bontang</span>
                         <span class="text-xs text-gray-500 font-medium">Kota Industri</span>
                     </div>
                 </div>
             </div>
 
-            {{-- ── Right: Hero Image + Floating Badges ── --}}
+            {{-- Right: Hero Image + Floating Badges --}}
             <div class="relative flex justify-center items-center z-10"
                  data-aos="fade-left" data-aos-duration="700" data-aos-delay="150">
 
-                {{-- Floating stat badges --}}
-                <div class="pop-in absolute -top-4 -left-4 md:left-4 bg-white rounded-2xl shadow-xl
+                <div class="absolute -top-4 -left-4 md:left-4 bg-white rounded-2xl shadow-xl
                             shadow-blue-200/60 border border-blue-100 px-4 py-3 flex items-center gap-3
-                            text-sm font-semibold z-20" style="animation-delay:.3s">
+                            text-sm font-semibold z-20 animate-float">
                     <span class="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
                         <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
@@ -250,9 +270,9 @@
                     </div>
                 </div>
 
-                <div class="pop-in absolute -bottom-2 right-0 md:right-4 bg-white rounded-2xl shadow-xl
+                <div class="absolute -bottom-2 right-0 md:right-4 bg-white rounded-2xl shadow-xl
                             shadow-orange-200/60 border border-orange-100 px-4 py-3 flex items-center gap-3
-                            text-sm font-semibold z-20" style="animation-delay:.55s">
+                            text-sm font-semibold z-20 animate-float" style="animation-delay: 1s;">
                     <span class="w-8 h-8 rounded-xl bg-orange-100 flex items-center justify-center flex-shrink-0">
                         <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -265,17 +285,15 @@
                     </div>
                 </div>
 
-                {{-- Main hero image --}}
                 <img src="gambar-1.png" alt="RuangUsaha Hero"
                      class="w-[260px] sm:w-[340px] md:w-[440px] animate-float drop-shadow-2xl relative z-10">
 
-                {{-- Glow behind image --}}
                 <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-300/20 to-orange-300/20
                             blur-3xl scale-75 pointer-events-none"></div>
             </div>
         </div>
 
-        {{-- Wave divider --}}
+        {{-- Wave divider to white section --}}
         <div class="wave-top relative -bottom-1">
             <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
                 <path d="M0 60 C360 0 1080 0 1440 60 L1440 60 L0 60 Z" fill="white"/>
@@ -289,7 +307,6 @@
     <section class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-6 lg:px-16">
 
-            {{-- Section header --}}
             <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
                 <div data-aos="fade-right">
                     <span class="text-xs font-bold uppercase tracking-widest text-blue-500 mb-2 block">Direktori</span>
@@ -298,7 +315,7 @@
                     </h2>
                     <p class="text-gray-500 mt-2 text-sm max-w-sm">Usaha lokal yang telah terdaftar di platform kami.</p>
                 </div>
-                <a href="{{ route('umkm.index') }}
+                <a href="{{ route('umkm.index') }}"
                    data-aos="fade-left"
                    class="link-anim text-sm font-semibold text-blue-600 hover:text-blue-700
                           flex items-center gap-1.5 flex-shrink-0">
@@ -323,18 +340,17 @@
                     ];
                     $g = $gradients[$loop->index % count($gradients)];
                 @endphp
-                <a href="{{ route('umkm.show', $umkm->id) }}
-                   class="logo-card group flex flex-col items-center bg-white rounded-2xl p-5
-                          border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-blue-100
-                          hover:border-blue-100 text-center"
+                <a href="{{ route('umkm.show', $umkm->id) }}"
+                   class="logo-card umkm-card card-animate group flex flex-col items-center bg-white rounded-2xl p-5
+                          border border-gray-100 shadow-md shadow-blue-50 hover:shadow-2xl hover:shadow-blue-200
+                          hover:border-blue-100 text-center relative"
                    data-aos="zoom-in" data-aos-delay="{{ min($loop->index * 50, 350) }}">
 
-                    {{-- Avatar --}}
                     <div class="logo-ring w-16 h-16 rounded-2xl mb-3 flex items-center justify-center
                                 transition-all duration-300 flex-shrink-0 overflow-hidden
                                 {{ $umkm->logo ? 'bg-gray-50' : 'bg-gradient-to-br '.$g }}">
                         @if($umkm->logo)
-                            <img src="{{ asset('storage/'.$umkm->logo) }}
+                            <img src="{{ asset('storage/'.$umkm->logo) }}"
                                  class="w-full h-full object-cover" alt="{{ $umkm->nama_usaha }}">
                         @else
                             <span class="text-2xl font-extrabold text-white select-none">
@@ -408,7 +424,6 @@
                             cursor-default"
                      data-aos="fade-up" data-aos-delay="{{ min($loop->index * 80, 320) }}">
 
-                    {{-- Icon --}}
                     <div class="w-14 h-14 flex-shrink-0 rounded-2xl flex items-center justify-center
                                 {{ $s['icon_bg'] }} shadow-sm {{ $s['icon_txt'] }}">
                         @if($kategori->icon)
@@ -466,7 +481,7 @@
                     </h2>
                     <p class="text-gray-500 mt-2 text-sm max-w-sm">Tips dan inspirasi untuk mengembangkan usaha Anda.</p>
                 </div>
-                <a href="#" data-aos="fade-left"
+                <a href="{{ route('blog.index') }}" data-aos="fade-left"
                    class="link-anim text-sm font-semibold text-teal-600 hover:text-teal-700
                           flex items-center gap-1.5 flex-shrink-0">
                     Semua artikel
@@ -477,18 +492,33 @@
             </div>
 
             <div class="grid md:grid-cols-3 gap-6">
+                @php
+                $blogHeaders = [
+                    ['bg' => 'from-blue-500 to-cyan-400', 'tag_bg' => 'bg-white text-blue-600', 'tag' => 'UMKM'],
+                    ['bg' => 'from-purple-500 to-pink-400', 'tag_bg' => 'bg-white text-purple-600', 'tag' => 'Bisnis'],
+                    ['bg' => 'from-orange-400 to-yellow-300', 'tag_bg' => 'bg-white text-orange-600', 'tag' => 'Tips'],
+                ];
+                @endphp
                 @forelse ($blogs ?? [] as $blog)
                 @php $bh = $blogHeaders[$loop->index % count($blogHeaders)]; @endphp
-                <article class="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden
-                                hover:shadow-xl hover:shadow-blue-100 hover:-translate-y-2
-                                transition-all duration-300"
+                <article class="blog-card card-animate group bg-white rounded-2xl border border-gray-100 shadow-md
+                                shadow-blue-50 overflow-hidden hover:shadow-2xl hover:shadow-blue-200
+                                hover:-translate-y-2 transition-all duration-300"
                          data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
-                    <div class="blog-img-overlay h-44 bg-gradient-to-br {{ $bh['bg'] }}
-                                flex items-center justify-center relative">
-                        <svg class="w-14 h-14 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                        </svg>
+                    <div class="blog-img-overlay card-img-wrap h-44 relative overflow-hidden">
+                        @if($blog->gambar)
+                            <img src="{{ asset('storage/'.$blog->gambar) }}"
+                                 alt="{{ $blog->judul }}"
+                                 class="w-full h-full object-cover">
+                        @else
+                            <div class="w-full h-full bg-gradient-to-br {{ $bh['bg'] }}
+                                        flex items-center justify-center">
+                                <svg class="w-14 h-14 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                            </div>
+                        @endif
                         <span class="absolute bottom-3 left-4 text-xs font-bold px-2.5 py-1 rounded-full {{ $bh['tag_bg'] }}">
                             {{ $bh['tag'] }}
                         </span>
@@ -501,7 +531,7 @@
                         <p class="text-gray-500 text-sm leading-relaxed line-clamp-3">
                             {{ \Illuminate\Support\Str::limit($blog->isi, 90) }}
                         </p>
-                        <a href="#" class="link-anim inline-flex items-center gap-1 mt-4 text-orange-600
+                        <a href="{{ route('blog.show', $blog->id) }}" class="link-anim inline-flex items-center gap-1 mt-4 text-orange-600
                                           text-sm font-semibold hover:text-orange-700 transition-colors">
                             Baca selengkapnya
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
@@ -510,9 +540,7 @@
                         </a>
                     </div>
                 </article>
-
                 @empty
-                {{-- Pesan kosong - tidak ada placeholder --}}
                 <div class="col-span-3 text-center py-16">
                     <div class="w-20 h-20 rounded-2xl bg-orange-50 flex items-center justify-center mx-auto mb-4">
                         <svg class="w-10 h-10 text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -535,11 +563,9 @@
                         overflow-hidden px-8 md:px-16 py-14 text-center shadow-2xl shadow-blue-300/40"
                  data-aos="zoom-in-up">
 
-                {{-- Decorative blobs inside banner --}}
                 <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
                 <div class="absolute bottom-0 right-0 w-80 h-80 bg-orange-400/15 rounded-full translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
 
-                {{-- Dot grid overlay --}}
                 <div class="absolute inset-0 opacity-[.06]"
                      style="background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:24px 24px;"></div>
 
@@ -558,29 +584,29 @@
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                         @guest
                         <a href="{{ route('login.role', 'umkm') }}"
-                        class="btn-shimmer inline-flex items-center gap-2 px-8 py-3.5
-                                bg-gradient-to-r from-orange-500 to-amber-400 text-white font-bold
-                                rounded-2xl shadow-xl shadow-orange-900/30 hover:-translate-y-0.5
-                                active:scale-95 transition-all duration-200 text-sm">
+                           class="btn-shimmer inline-flex items-center gap-2 px-8 py-3.5
+                                  bg-gradient-to-r from-orange-500 to-amber-400 text-white font-bold
+                                  rounded-2xl shadow-xl shadow-orange-900/30 hover:-translate-y-0.5
+                                  active:scale-95 transition-all duration-200 text-sm">
                             Daftar Gratis Sekarang →
                         </a>
                         @endguest
                         
                         @auth
                         <a href="{{ auth()->user()->umkm ? route('umkm.pilih') : route('umkm.create') }}"
-                        class="btn-shimmer inline-flex items-center gap-2 px-8 py-3.5
-                                bg-gradient-to-r from-orange-500 to-amber-400 text-white font-bold
-                                rounded-2xl shadow-xl shadow-orange-900/30 hover:-translate-y-0.5
-                                active:scale-95 transition-all duration-200 text-sm">
+                           class="btn-shimmer inline-flex items-center gap-2 px-8 py-3.5
+                                  bg-gradient-to-r from-orange-500 to-amber-400 text-white font-bold
+                                  rounded-2xl shadow-xl shadow-orange-900/30 hover:-translate-y-0.5
+                                  active:scale-95 transition-all duration-200 text-sm">
                             Kelola Bisnis Saya →
                         </a>
                         @endauth
                         
                         <a href="{{ route('umkm.index') }}"
-                        class="inline-flex items-center gap-2 px-7 py-3.5 bg-white/10 backdrop-blur
-                                text-white font-semibold rounded-2xl border border-white/25
-                                hover:bg-white/20 hover:-translate-y-0.5 active:scale-95
-                                transition-all duration-200 text-sm">
+                           class="inline-flex items-center gap-2 px-7 py-3.5 bg-white/10 backdrop-blur
+                                  text-white font-semibold rounded-2xl border border-white/25
+                                  hover:bg-white/20 hover:-translate-y-0.5 active:scale-95
+                                  transition-all duration-200 text-sm">
                             Jelajahi UMKM
                         </a>
                     </div>
@@ -589,6 +615,7 @@
         </div>
     </section>
 
+    {{-- ── FOOTER ── --}}
     @include('partials.footer')
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

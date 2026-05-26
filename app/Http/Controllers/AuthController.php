@@ -51,6 +51,16 @@ class AuthController extends Controller
             ]);
         }
 
+        // 🚫 CEK STATUS USER
+if ($user->status === 'suspended') {
+
+    Auth::logout();
+
+    return back()->withErrors([
+        'email' => 'Akun Anda telah disuspend admin'
+    ]);
+}
+
         // 🚀 REDIRECT SESUAI ROLE
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');

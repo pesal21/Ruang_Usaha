@@ -21,6 +21,8 @@ class UmkmController extends Controller
         return view('umkm.create', compact('kategoris'));
     }
 
+   
+
     public function edit($id)
     {
         $umkm = Umkm::where('id', $id)
@@ -60,36 +62,61 @@ class UmkmController extends Controller
         Umkm::create($data);
 
         return redirect()->route('umkm.success');
+
     }
 
     // =============================
     // DASHBOARD UMKM
     // =============================
     public function dashboard($id)
-    {
-        $umkm = Umkm::where('id', $id)
-            ->where('user_id', auth()->id())
-            ->firstOrFail();
+{
+    $umkm = Umkm::where('id', $id)
+        ->where('user_id', auth()->id())
+        ->firstOrFail();
 
-        $produk = $umkm->produk;
-
-        return view('umkm.dashboard', compact('umkm', 'produk'));
+    // cek suspend
+    if ($umkm->status === 'suspended') {
+        return redirect()->route('umkm.pilih')
+            ->with('error', 'UMKM Anda sedang disuspend oleh admin.');
     }
+
+    // cek pending
+    if ($umkm->status === 'pending') {
+        return redirect()->route('umkm.pilih')
+            ->with('error', 'UMKM Anda belum disetujui admin.');
+    }
+
+    $produk = $umkm->produk;
+
+    return view('umkm.dashboard', compact('umkm', 'produk'));
+}
     // =============================
     // KELOLA PRODUK & GALERI
     // =============================
     public function kelola($id)
-    {
-        $umkm = Umkm::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+{
+    $umkm = Umkm::where('id', $id)
+        ->where('user_id', Auth::id())
+        ->firstOrFail();
 
-        return view('umkm.kelola-produk-foto', [
-            'umkm'   => $umkm,
-            'produk' => $umkm->produk,
-            'galeri' => $umkm->galeri,
-        ]);
+    // cek suspend
+    if ($umkm->status === 'suspended') {
+        return redirect()->route('umkm.pilih')
+            ->with('error', 'UMKM Anda sedang disuspend oleh admin.');
     }
+
+    // cek pending
+    if ($umkm->status === 'pending') {
+        return redirect()->route('umkm.pilih')
+            ->with('error', 'UMKM Anda belum disetujui admin.');
+    }
+
+    return view('umkm.kelola-produk-foto', [
+        'umkm'   => $umkm,
+        'produk' => $umkm->produk,
+        'galeri' => $umkm->galeri,
+    ]);
+}
 
     // =============================
     // EDIT UMKM
@@ -292,16 +319,25 @@ class UmkmController extends Controller
     // DETAIL UMKM (PUBLIC)
     // =============================
     public function show($id)
-    {
-        $umkm = Umkm::findOrFail($id);
-        $umkm->increment('views');
+{
+    $umkm = Umkm::findOrFail($id);
 
-        return view('umkm.show', compact('umkm'));
+    // jika suspend jangan tampil ke publik
+    if ($umkm->status === 'suspended') {
+        return redirect()->route('beranda')
+            ->with('error', 'UMKM ini sedang disuspend admin.');
     }
+
+    $umkm->increment('views');
+
+    return view('umkm.show', compact('umkm'));
+}
+
+
     public function pilih()
-    {
-        $umkms = auth()->user()->umkms;
+{
+    $umkms = auth()->user()->umkms;
 
-        return view('umkm.pilih', compact('umkms'));
-    }
+    return view('umkm.pilih', compact('umkms'));
+}
 }
