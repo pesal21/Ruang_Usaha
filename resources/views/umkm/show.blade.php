@@ -78,7 +78,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, .6) 0%, transparent 50%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, .6) 0%, transparent 25%);
             opacity: 0;
             transition: opacity .3s ease;
             pointer-events: none;
@@ -261,9 +261,10 @@
 
                         {{-- Alamat --}}
                         <div class="flex items-center gap-3 bg-blue-50/60 border border-blue-100 rounded-xl px-4 py-3
-                                    transition-all duration-200 hover:bg-blue-50 hover:shadow-sm">
+                            transition-all duration-200 hover:bg-blue-50 hover:shadow-sm">
+
                             <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-teal-100 to-teal-200
-                                        flex items-center justify-center flex-shrink-0">
+                                flex items-center justify-center flex-shrink-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-600" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -272,9 +273,16 @@
                                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                             </div>
+
                             <div class="min-w-0">
                                 <p class="text-xs text-gray-400 font-medium">Alamat</p>
-                                <p class="text-sm font-semibold text-gray-700 truncate">{{ $umkm->alamat_lengkap ?? '-' }}</p>
+
+                            <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($umkm->nama_usaha . ' ' . $umkm->alamat_lengkap . ' Bontang Kalimantan Timur') }}"
+                            target="_blank"
+                            class="block text-sm font-semibold text-gray-700 hover:text-blue-600 hover:underline">
+
+                                {{ $umkm->alamat_lengkap ?? 'Lokasi tidak tersedia' }}
+                            </a>
                             </div>
                         </div>
 
@@ -338,10 +346,10 @@
             @if($umkm->produk->count())
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @foreach($umkm->produk as $index => $p)
-                <div class="product-card card-animate bg-white rounded-2xl border border-gray-100
+                <a href="{{ route('produk.show', $p->id) }}"
+                    class="product-card card-animate bg-white rounded-2xl border border-gray-100
                             shadow-md shadow-blue-50 overflow-hidden hover:shadow-xl hover:shadow-blue-100
-                            hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
-                    style="animation-delay: {{ $index * 0.05 }}s;">
+                            hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
 
                     {{-- Image --}}
                     <div class="product-img-wrap relative h-36 bg-gradient-to-br from-blue-50 via-sky-50 to-teal-50
@@ -374,7 +382,7 @@
                             Rp {{ number_format($p->harga, 0, ',', '.') }}
                         </p>
                     </div>
-                </div>
+                </a>
                 @endforeach
             </div>
             @else
@@ -417,8 +425,7 @@
                 @foreach($umkm->galeri as $index => $foto)
                 <div class="gallery-card card-animate rounded-2xl border border-gray-100
                             shadow-md shadow-blue-50 overflow-hidden hover:shadow-xl hover:shadow-blue-100
-                            hover:-translate-y-1 transition-all duration-300 bg-white"
-                    style="animation-delay: {{ $index * 0.06 }}s;">
+                            hover:-translate-y-1 transition-all duration-300 bg-white">
                     <div class="h-48 sm:h-56 w-full overflow-hidden">
                         <img src="{{ asset('storage/'.$foto->foto) }}"
                             class="w-full h-full object-cover"
@@ -447,6 +454,15 @@
 
     {{-- ── FOOTER ── --}}
     @include('partials.footer')
+
+    {{-- ── Script untuk menyimpan referrer dan scroll position ── --}}
+    <script>
+        function saveReferrer(url) {
+            sessionStorage.setItem('referrerUrl', window.location.href);
+            sessionStorage.setItem('referrerScroll', window.scrollY);
+            window.location.href = url;
+        }
+    </script>
 
 </body>
 

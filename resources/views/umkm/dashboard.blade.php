@@ -74,7 +74,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, .6) 0%, transparent 50%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, .6) 0%, transparent 25%);
             opacity: 0;
             transition: opacity .3s ease;
             pointer-events: none;
@@ -93,7 +93,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, .5) 0%, transparent 50%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, .5) 0%, transparent 20%);
             opacity: 0;
             transition: opacity .3s ease;
             pointer-events: none;
@@ -441,10 +441,10 @@
             @if(count($produk) > 0)
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @foreach($produk as $index => $p)
-                <div class="product-card card-animate bg-white rounded-2xl border border-gray-100
+                <a href="{{ route('produk.show', $p->id) }}"
+                    class="product-card card-animate bg-white rounded-2xl border border-gray-100
                             shadow-md shadow-blue-50 overflow-hidden hover:shadow-xl hover:shadow-blue-100
-                            hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
-                    style="animation-delay: {{ $index * 0.05 }}s;">
+                            hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
 
                     {{-- Image --}}
                     <div class="product-img-wrap relative h-36 bg-gradient-to-br from-blue-50 via-sky-50 to-teal-50
@@ -480,7 +480,7 @@
                             Rp {{ number_format($p->harga, 0, ',', '.') }}
                         </p>
                     </div>
-                </div>
+                </a>
                 @endforeach
             </div>
             @else
@@ -521,8 +521,7 @@
                 @foreach($umkm->galeri as $index => $foto)
                 <div class="gallery-card card-animate rounded-2xl border border-gray-100
                             shadow-md shadow-blue-50 overflow-hidden hover:shadow-xl hover:shadow-blue-100
-                            hover:-translate-y-1 transition-all duration-300 bg-white"
-                    style="animation-delay: {{ $index * 0.06 }}s;">
+                            hover:-translate-y-1 transition-all duration-300 bg-white">
                     <div class="h-48 sm:h-56 w-full overflow-hidden">
                         <img src="{{ asset('storage/'.$foto->foto) }}"
                             class="w-full h-full object-cover"
@@ -538,6 +537,15 @@
 
     {{-- ── FOOTER ── --}}
     @include('partials.footer')
+
+    {{-- ── Script untuk menyimpan referrer dan scroll position ── --}}
+    <script>
+        function saveReferrer(url) {
+            sessionStorage.setItem('referrerUrl', window.location.href);
+            sessionStorage.setItem('referrerScroll', window.scrollY);
+            window.location.href = url;
+        }
+    </script>
 
 </body>
 </html>

@@ -425,5 +425,14 @@
     {{-- ── FOOTER ── --}}
     @include('partials.footer')
 
+    {{-- ── Script untuk menyimpan referrer dan scroll position ── --}}
+    <script>
+        function saveReferrer(url) {
+            sessionStorage.setItem('referrerUrl', window.location.href);
+            sessionStorage.setItem('referrerScroll', window.scrollY);
+            window.location.href = url;
+        }
+    </script>
+
 </body>
 </html>

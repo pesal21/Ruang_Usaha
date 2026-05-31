@@ -196,8 +196,7 @@
     <a href="{{ route('umkm.dashboard', $umkm->id) }}"
     class="umkm-card card-animate group relative bg-white rounded-2xl border border-gray-100
     shadow-md shadow-blue-50 overflow-hidden hover:shadow-2xl hover:shadow-blue-200
-    hover:-translate-y-2 transition-all duration-300 flex flex-col items-center p-6"
-    style="animation-delay: {{ $index * 0.08 }}s">
+    hover:-translate-y-2 transition-all duration-300 flex flex-col items-center p-6">
 
     {{-- Logo --}}
     <div class="card-img-wrap w-20 h-20 mb-5 rounded-2xl flex items-center justify-center

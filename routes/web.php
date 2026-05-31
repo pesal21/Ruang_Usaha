@@ -26,6 +26,9 @@ Route::get('/beranda', [HomeController::class, 'index']);
 Route::get('/umkm', [UmkmPublicController::class, 'index'])
     ->name('umkm.index');
 
+Route::get('/produk/{id}', [UmkmPublicController::class, 'showProduk'])
+    ->name('produk.show');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -223,6 +226,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/kategori', [KategoriController::class, 'index'])
         ->name('admin.kategori.index');
 
+    Route::get('/admin/kategori/{kategori}/edit', [KategoriController::class, 'edit'])
+        ->name('admin.kategori.edit');
+
     Route::post('/admin/kategori', [KategoriController::class, 'store'])
         ->name('admin.kategori.store');
 
@@ -264,6 +270,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::put('/blog/{id}', [BlogController::class, 'update'])->name('admin.blog.update');
 
     Route::post('/blog/{id}/delete', [BlogController::class, 'destroy'])->name('admin.blog.delete');
+    
+    // TAMBAHKAN INI
+    Route::post('/blog/generate-ai', [BlogController::class, 'generateAiBlog'])->name('admin.blog.generate.ai');
 });
 
 Route::post('/admin/umkm/{id}/suspend', [AdminUmkmController::class, 'suspend'])
@@ -275,3 +284,4 @@ Route::post('/admin/umkm/{id}/activate', [AdminUmkmController::class, 'activate'
 
 Route::get('/admin/umkm/{id}', [AdminUmkmController::class, 'detailUmkm'])
     ->name('admin.umkm.detail');
+    

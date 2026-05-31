@@ -138,7 +138,7 @@
             left: 150%;
         }
 
-        /* ── Staggered entrance ── */
+        /* ── Staggered card entrance ── */
         @keyframes fadeUp {
             from {
                 opacity: 0;
@@ -152,6 +152,22 @@
 
         .card-animate {
             animation: fadeUp .5s ease both;
+        }
+
+        /* ── Page load fade-in for main content ── */
+        @keyframes fadeInMain {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-enter {
+            animation: fadeInMain 0.6s ease forwards;
         }
 
         /* ── Select custom arrow ── */
@@ -171,10 +187,10 @@
     @include('partials.navbar')
 
     {{-- ── MAIN CONTENT ── --}}
-    <main class="relative z-10 flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-24">
+    <main class="relative z-10 flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-24 page-enter">
 
         {{-- ── Back Link ── --}}
-        <div class="mb-8">
+        <div class="mb-8 card-animate" style="animation-delay: 0.1s;">
             <a href="{{ route('umkm.dashboard', $umkm->id) }}"
                 class="back-link text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none"
@@ -186,7 +202,7 @@
         </div>
 
         {{-- ── Page Header ── --}}
-        <div class="text-center mb-12">
+        <div class="text-center mb-12 card-animate" style="animation-delay: 0.15s;">
             <div class="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600
                         px-4 py-1.5 rounded-full text-xs font-semibold mb-5 shadow-sm">
                 <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
@@ -214,7 +230,7 @@
         <div class="grid lg:grid-cols-2 gap-10">
 
             {{-- ================= PRODUK ================= --}}
-            <section>
+            <section class="card-animate" style="animation-delay: 0.2s;">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-teal-100
@@ -245,8 +261,7 @@
                     @foreach($produk as $index => $item)
                     <div class="product-card card-animate bg-white rounded-2xl border border-gray-100
                                 shadow-md shadow-blue-50 overflow-hidden hover:shadow-lg hover:shadow-blue-100
-                                transition-all duration-300 flex items-center gap-4 p-4"
-                        style="animation-delay: {{ $index * 0.05 }}s;">
+                                transition-all duration-300 flex items-center gap-4 p-4">
 
                         {{-- Gambar Produk --}}
                         <div class="product-img-wrap w-16 h-16 rounded-xl flex-shrink-0 overflow-hidden
@@ -269,6 +284,9 @@
                             <h3 class="font-bold text-gray-800 text-sm truncate">{{ $item->nama_produk }}</h3>
                             @if($item->kategori ?? false)
                             <p class="text-xs text-gray-400 mt-0.5">{{ $item->kategori }}</p>
+                            @endif
+                            @if($item->deskripsi)
+                            <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ $item->deskripsi }}</p>
                             @endif
                             @if($item->harga)
                             <p class="text-sm font-bold text-blue-600 mt-1">
@@ -329,7 +347,7 @@
             </section>
 
             {{-- ================= GALERI ================= --}}
-            <section>
+            <section class="card-animate" style="animation-delay: 0.25s;">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-teal-100
@@ -371,8 +389,7 @@
                     @foreach($umkm->galeri as $index => $foto)
                     <div class="gallery-card card-animate rounded-2xl border border-gray-100
                                 shadow-md shadow-blue-50 overflow-hidden hover:shadow-xl hover:shadow-blue-100
-                                hover:-translate-y-1 transition-all duration-300 relative group"
-                        style="animation-delay: {{ $index * 0.06 }}s;">
+                                hover:-translate-y-1 transition-all duration-300 relative group">
                         <div class="h-40 w-full overflow-hidden">
                             <img src="{{ asset('storage/'.$foto->foto) }}"
                                 class="w-full h-full object-cover"

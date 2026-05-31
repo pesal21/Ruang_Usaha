@@ -15,6 +15,12 @@ class KategoriController extends Controller
         return view('admin.kategori.index', compact('kategoris'));
     }
 
+    public function edit($id)
+    {
+        $kategori = Kategori::findOrFail($id);
+        return view('admin.kategori.edit', compact('kategori'));
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -59,7 +65,7 @@ class KategoriController extends Controller
         $kategori->deskripsi = $data['deskripsi'] ?? null;  // tambah ini
         $kategori->save();
 
-        return back()->with('success', 'Kategori berhasil diperbarui');
+        return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil diperbarui');
     }
 
     public function destroy($id)

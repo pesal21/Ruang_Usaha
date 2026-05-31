@@ -60,4 +60,29 @@ class UmkmPublicController extends Controller
 
     return view('umkm.show', compact('umkm', 'produk', 'galeri'));
 }
+
+public function showProduk($id)
+{
+    // Ambil detail produk
+    $produk = ProdukUmkm::findOrFail($id);
+    
+    // Ambil UMKM yang memiliki produk ini
+    $umkm = $produk->umkm;
+    
+    $isAdmin = auth()->check() && auth()->user()->role === 'admin';
+    
+    // User biasa hanya bisa lihat produk dari UMKM yang approved
+    if (!$isAdmin) {
+        abort_unless($umkm->status === 'approved', 403);
+    }
+    
+    // Ambil rekomendasi produk dari UMKM yang sama (kecuali produk yang sedang dilihat)
+    // Minimal 2-4 produk
+    $rekomendasi = ProdukUmkm::where('umkm_id', $umkm->id)
+        ->where('id', '!=', $produk->id)
+        ->limit(4)
+        ->get();
+    
+    return view('produk.show', compact('produk', 'umkm', 'rekomendasi'));
+}
 }
