@@ -89,7 +89,20 @@
         .product-card {
             position: relative;
         }
-
+        .product-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, .5) 0%, transparent 20%);
+            opacity: 0;
+            transition: opacity .3s ease;
+            pointer-events: none;
+            border-radius: inherit;
+            z-index: 1;
+        }
+        .product-card:hover::before {
+            opacity: 1;
+        }
         .product-img-wrap {
             overflow: hidden;
         }
@@ -532,5 +545,14 @@
     
     <?php echo $__env->make('partials.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
+    
+    <script>
+        function saveReferrer(url) {
+            sessionStorage.setItem('referrerUrl', window.location.href);
+            sessionStorage.setItem('referrerScroll', window.scrollY);
+            window.location.href = url;
+        }
+    </script>
+
 </body>
-</html><?php /**PATH D:\TUGAS KULIAH\PPL\Ruang_Usaha\resources\views/umkm/dashboard.blade.php ENDPATH**/ ?>
+</html><?php /**PATH D:\KULIAH\TUGAS KULIAH\Sem 6\Produk Perangkat Lunak\UMKM-Bontang\resources\views/umkm/dashboard.blade.php ENDPATH**/ ?>

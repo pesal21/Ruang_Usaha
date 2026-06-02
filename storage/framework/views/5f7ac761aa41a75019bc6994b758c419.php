@@ -168,4 +168,4 @@
     .footer-link:hover::after {
         width: 100%;
     }
-</style><?php /**PATH D:\TUGAS KULIAH\PPL\Ruang_Usaha\resources\views/partials/footer.blade.php ENDPATH**/ ?>
+</style><?php /**PATH D:\KULIAH\TUGAS KULIAH\Sem 6\Produk Perangkat Lunak\UMKM-Bontang\resources\views/partials/footer.blade.php ENDPATH**/ ?>

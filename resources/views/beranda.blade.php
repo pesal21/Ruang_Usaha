@@ -155,6 +155,9 @@
         }
     </style>
 </head>
+
+<img src="http://127.0.0.1:8000/storage/logo_umkm/SHn4dmwhTKS0sDGijiD9BSyyyMelhZRgf4dRaMy9.png"
+     width="200">
 <body class="hero-bg noise text-gray-800 antialiased">
 
     {{-- ── NAVBAR ── --}}
@@ -618,7 +621,7 @@
     {{-- ── FOOTER ── --}}
     @include('partials.footer')
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script> 
     <script>
         AOS.init({ once: true, offset: 100, duration: 650 });
 

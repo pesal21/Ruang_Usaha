@@ -155,6 +155,9 @@
         }
     </style>
 </head>
+
+<img src="http://127.0.0.1:8000/storage/logo_umkm/SHn4dmwhTKS0sDGijiD9BSyyyMelhZRgf4dRaMy9.png"
+     width="200">
 <body class="hero-bg noise text-gray-800 antialiased">
 
     
@@ -615,7 +618,7 @@
     
     <?php echo $__env->make('partials.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script> 
     <script>
         AOS.init({ once: true, offset: 100, duration: 650 });
 
@@ -625,4 +628,4 @@
         if (btn && menu) btn.addEventListener('click', () => menu.classList.toggle('hidden'));
     </script>
 </body>
-</html><?php /**PATH D:\TUGAS KULIAH\PPL\Ruang_Usaha\resources\views/beranda.blade.php ENDPATH**/ ?>
+</html><?php /**PATH D:\KULIAH\TUGAS KULIAH\Sem 6\Produk Perangkat Lunak\UMKM-Bontang\resources\views/beranda.blade.php ENDPATH**/ ?>
